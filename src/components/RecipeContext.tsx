@@ -16,6 +16,7 @@ interface RecipeContextType {
   recipesFiltered: Recipe[];
   setRecipes: React.Dispatch<React.SetStateAction<Recipe[]>>;
   filterRecipes: (category: string | null, search: string) => void;
+  updateRecipes: () => void;
 }
 interface RecipeProviderProps {
   children: React.ReactNode;
@@ -36,15 +37,19 @@ export const RecipeProvider: React.FC<RecipeProviderProps> = ({ children }) => {
   const [recipesFiltered, setRecipesFiltered] = useState<Recipe[]>([]);
 
   useEffect(() => {
-    const loadRecipes = async () => {
-      const fetchedRecipes = await fetchRecipes();
-
-      setRecipesFiltered(fetchedRecipes);
-      setRecipes(fetchedRecipes);
-    };
-
     loadRecipes();
   }, []);
+
+  const loadRecipes = async () => {
+    const fetchedRecipes = await fetchRecipes();
+
+    setRecipesFiltered(fetchedRecipes);
+    setRecipes(fetchedRecipes);
+  };
+
+  const updateRecipes = () => {
+    loadRecipes();
+  };
 
   const filterRecipes = (category: string | null, search: string) => {
     let filteredRecipes = recipes;
@@ -65,7 +70,13 @@ export const RecipeProvider: React.FC<RecipeProviderProps> = ({ children }) => {
 
   return (
     <RecipeContext.Provider
-      value={{ recipes, recipesFiltered, setRecipes, filterRecipes }}
+      value={{
+        recipes,
+        recipesFiltered,
+        setRecipes,
+        filterRecipes,
+        updateRecipes,
+      }}
     >
       {children}
     </RecipeContext.Provider>

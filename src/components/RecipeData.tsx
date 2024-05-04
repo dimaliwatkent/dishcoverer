@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import {
   Card,
   CardHeader,
@@ -12,8 +13,8 @@ import { useRecipeContext } from "./RecipeContext";
 import { Sparkle, Sparkles } from "lucide-react";
 
 const RecipeData: React.FC = () => {
-  const { recipesFiltered } = useRecipeContext();
-  // Initialize state with value from local storage
+  const { recipesFiltered, updateRecipes } = useRecipeContext();
+
   const [favorites, setFavorites] = useState(() => {
     const storedFavorites = localStorage.getItem("favorites");
     return storedFavorites ? JSON.parse(storedFavorites) : [];
@@ -26,13 +27,30 @@ const RecipeData: React.FC = () => {
   const handleFavoriteToggle = (recipeId: string) => {
     setFavorites((prevFavorites: string[]) => {
       if (prevFavorites.includes(recipeId)) {
-        // Remove from favorites
         return prevFavorites.filter((id: string) => id !== recipeId);
       } else {
-        // Add to favorites
         return [...prevFavorites, recipeId];
       }
     });
+  };
+  const formatCategoryName = (category: string): string => {
+    let formattedCategory = category.replace(/_/g, " ");
+    formattedCategory = formattedCategory.replace(/\b\w/g, (l) =>
+      l.toUpperCase(),
+    );
+    return formattedCategory;
+  };
+
+  const deleteRecipe = async (id: string) => {
+    try {
+      await axios.delete(
+        `https://dishcoverer.netlify.app/.netlify/functions/api/${id}`,
+      );
+      // reloads after delete
+      updateRecipes();
+    } catch (error) {
+      console.error("Error deleting recipe:", error);
+    }
   };
 
   return (
@@ -42,9 +60,9 @@ const RecipeData: React.FC = () => {
           <Card className="max-w-52">
             <CardHeader className="flex gap-3">
               <div className="flex flex-col pr-8">
-                <h2>{recipe.title}</h2>
+                <h2 className="text-lg font-bold">{recipe.title}</h2>
 
-                <p>{recipe.author}</p>
+                <p className="text-sm text-gray-400">{recipe.author}</p>
 
                 <Tooltip content="Add to Favorites">
                   <Button
@@ -68,7 +86,11 @@ const RecipeData: React.FC = () => {
             </CardHeader>
             <Divider />
             <CardBody>
-              <p>{recipe.categories}</p>
+              <p className="text-xs text-gray-500">
+                {recipe.categories
+                  .map((category) => formatCategoryName(category))
+                  .join(", ")}
+              </p>
             </CardBody>
             <Divider />
             <CardFooter>
@@ -76,7 +98,11 @@ const RecipeData: React.FC = () => {
                 <Button variant="flat" color="primary">
                   Edit
                 </Button>
-                <Button variant="flat" color="danger">
+                <Button
+                  variant="flat"
+                  color="danger"
+                  onClick={() => deleteRecipe(recipe._id)}
+                >
                   Delete
                 </Button>
               </div>

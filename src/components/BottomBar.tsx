@@ -46,7 +46,6 @@ const BottomBar = () => {
             size="sm"
             endContent={<Search />}
             type="search"
-            className=""
             onChange={handleSearchChange}
           />
         </NavbarContent>

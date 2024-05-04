@@ -1,8 +1,9 @@
-import { Button } from "@nextui-org/button";
+// import { Button } from "@nextui-org/button";
 import RecipeData from "./components/RecipeData";
 import { Divider } from "@nextui-org/divider";
 import BottomBar from "./components/BottomBar";
 import { RecipeProvider } from "./components/RecipeContext";
+import AddRecipe from "./components/AddRecipe";
 
 const App = () => {
   return (
@@ -16,10 +17,8 @@ const App = () => {
             Become a Dishcoverer and Unearth the World's Best Recipes!
           </p>
 
+          <AddRecipe />
           <Divider />
-          <Button className="mt-3" color="secondary" variant="flat">
-            Add a Recipe
-          </Button>
         </div>
 
         <RecipeData />
