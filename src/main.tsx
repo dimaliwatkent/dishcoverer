@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
 import { NextUIProvider } from "@nextui-org/react";
-import { Providers } from "./providers.tsx";
+import { Providers } from "./components/ThemeProviders.tsx";
 
 import "@fontsource/pacifico";
 

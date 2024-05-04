@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React from "react";
 import {
   Card,
   CardHeader,
@@ -8,45 +7,20 @@ import {
   Divider,
   Button,
 } from "@nextui-org/react";
-
-interface Recipe {
-  _id: string;
-  title: string;
-  categories: [string];
-}
-
-const fetchRecipes = async (): Promise<Recipe[]> => {
-  try {
-    const response = await axios.get<Recipe[]>(
-      "https://dishcoverer.netlify.app/.netlify/functions/api/",
-    );
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching recipes:", error);
-    return [];
-  }
-};
+import { useRecipeContext } from "./RecipeContext";
 
 const RecipeData: React.FC = () => {
-  const [recipes, setRecipes] = useState<Recipe[]>([]);
-
-  useEffect(() => {
-    const loadRecipes = async () => {
-      const fetchedRecipes = await fetchRecipes();
-      setRecipes(fetchedRecipes);
-    };
-
-    loadRecipes();
-  }, []);
+  const { recipesFiltered } = useRecipeContext();
 
   return (
     <div className="flex flex-wrap justify-center gap-3">
-      {recipes.map((recipe) => (
+      {recipesFiltered.map((recipe) => (
         <div key={recipe._id}>
           <Card className="max-w-[400px]">
             <CardHeader className="flex gap-3">
               <div className="flex flex-col">
                 <h2>{recipe.title}</h2>
+                <p>{recipe.author}</p>
               </div>
             </CardHeader>
             <Divider />

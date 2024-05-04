@@ -3,6 +3,7 @@ import { Navbar, NavbarContent, Input } from "@nextui-org/react";
 import { Search, ChevronUp } from "lucide-react";
 import ThemeSwitcher from "./ThemeSwitcher";
 import { Select, SelectItem } from "@nextui-org/react";
+import { useRecipeContext } from "./RecipeContext";
 
 const categories = [
   { value: "all", label: "All" },
@@ -20,6 +21,7 @@ const categories = [
 ];
 
 const BottomBar = () => {
+  const { filterRecipes } = useRecipeContext();
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [search, setSearch] = useState("");
 
@@ -28,16 +30,15 @@ const BottomBar = () => {
   ) => {
     const value = event.target.value;
     setSelectedCategory(value);
+    filterRecipes(value, search);
   };
 
-  const handleIngredientChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);
+    filterRecipes(selectedCategory, event.target.value);
   };
-
   return (
-    <div className="absolute bottom-0 w-full z-50">
+    <div className="fixed bottom-0 w-full z-50">
       <Navbar maxWidth="full">
         <NavbarContent as="div" justify="start" className="max-w-80">
           <Input
@@ -46,7 +47,7 @@ const BottomBar = () => {
             endContent={<Search />}
             type="search"
             className=""
-            onChange={handleIngredientChange}
+            onChange={handleSearchChange}
           />
         </NavbarContent>
         <NavbarContent as="div" justify="start">
@@ -56,7 +57,7 @@ const BottomBar = () => {
             className="max-w-60"
             disableSelectorIconRotation
             selectorIcon={<ChevronUp />}
-            selectionMode="multiple"
+            selectionMode="single"
             value={selectedCategory}
             onChange={handleCategoryChange}
           >
