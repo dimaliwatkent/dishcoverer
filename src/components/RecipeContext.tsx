@@ -47,7 +47,6 @@ export const RecipeProvider: React.FC<RecipeProviderProps> = ({ children }) => {
   }, []);
 
   const filterRecipes = (category: string | null, search: string) => {
-    console.log(recipes);
     let filteredRecipes = recipes;
     if (category === "all") {
       setRecipesFiltered(recipes);
