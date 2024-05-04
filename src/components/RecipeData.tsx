@@ -11,6 +11,7 @@ import {
 } from "@nextui-org/react";
 import { useRecipeContext } from "./RecipeContext";
 import { Sparkle, Sparkles } from "lucide-react";
+import EditRecipe from "./EditRecipe";
 
 const RecipeData: React.FC = () => {
   const { recipesFiltered, updateRecipes } = useRecipeContext();
@@ -95,9 +96,14 @@ const RecipeData: React.FC = () => {
             <Divider />
             <CardFooter>
               <div className="flex gap-2">
-                <Button variant="flat" color="primary">
-                  Edit
-                </Button>
+                <EditRecipe
+                  id={recipe._id}
+                  title={recipe.title}
+                  author={recipe.author}
+                  ingredients={recipe.ingredients}
+                  instructions={recipe.instructions}
+                  categories={recipe.categories}
+                />
                 <Button
                   variant="flat"
                   color="danger"
