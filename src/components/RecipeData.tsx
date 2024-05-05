@@ -12,6 +12,7 @@ import {
 import { useRecipeContext } from "./RecipeContext";
 import { Sparkle, Sparkles } from "lucide-react";
 import EditRecipe from "./EditRecipe";
+import ViewRecipe from "./ViewRecipe";
 
 const RecipeData: React.FC = () => {
   const { recipesFiltered, updateRecipes } = useRecipeContext();
@@ -54,66 +55,64 @@ const RecipeData: React.FC = () => {
     }
   };
 
+  const handleAnchorClick = () => {
+    alert();
+  };
   return (
     <div className="flex flex-wrap justify-center gap-3">
       {recipesFiltered.map((recipe) => (
         <div key={recipe._id}>
-          <Card className="max-w-52">
-            <CardHeader className="flex gap-3">
-              <div className="flex flex-col pr-8">
-                <h2 className="text-lg font-bold">{recipe.title}</h2>
+          <ViewRecipe recipe={recipe}>
+            <Card className="max-w-52">
+              <CardHeader className="flex gap-3">
+                <div className="flex flex-col pr-8">
+                  <h2 className="text-lg font-bold">{recipe.title}</h2>
 
-                <p className="text-sm text-gray-400">{recipe.author}</p>
+                  <p className="text-sm text-gray-400">{recipe.author}</p>
 
-                <Tooltip content="Add to Favorites">
+                  <Tooltip content="Add to Favorites">
+                    <Button
+                      isIconOnly
+                      className="rounded-full absolute top-2 right-2 z-10"
+                      size="sm"
+                      variant="flat"
+                      color={
+                        favorites.includes(recipe._id) ? "success" : "default"
+                      }
+                      onClick={() => handleFavoriteToggle(recipe._id)}
+                    >
+                      {favorites.includes(recipe._id) ? (
+                        <Sparkles />
+                      ) : (
+                        <Sparkle />
+                      )}
+                    </Button>
+                  </Tooltip>
+                </div>
+              </CardHeader>
+              <Divider />
+              <CardBody>
+                <p className="text-xs text-gray-500">
+                  {recipe.categories
+                    .map((category) => formatCategoryName(category))
+                    .join(", ")}
+                </p>
+              </CardBody>
+              <Divider />
+              <CardFooter>
+                <div className="flex gap-2">
+                  <EditRecipe recipe={recipe} />
                   <Button
-                    isIconOnly
-                    className="rounded-full absolute top-2 right-2 z-10"
-                    size="sm"
                     variant="flat"
-                    color={
-                      favorites.includes(recipe._id) ? "success" : "default"
-                    }
-                    onClick={() => handleFavoriteToggle(recipe._id)}
+                    color="danger"
+                    onClick={() => deleteRecipe(recipe._id)}
                   >
-                    {favorites.includes(recipe._id) ? (
-                      <Sparkles />
-                    ) : (
-                      <Sparkle />
-                    )}
+                    Delete
                   </Button>
-                </Tooltip>
-              </div>
-            </CardHeader>
-            <Divider />
-            <CardBody>
-              <p className="text-xs text-gray-500">
-                {recipe.categories
-                  .map((category) => formatCategoryName(category))
-                  .join(", ")}
-              </p>
-            </CardBody>
-            <Divider />
-            <CardFooter>
-              <div className="flex gap-2">
-                <EditRecipe
-                  id={recipe._id}
-                  title={recipe.title}
-                  author={recipe.author}
-                  ingredients={recipe.ingredients}
-                  instructions={recipe.instructions}
-                  categories={recipe.categories}
-                />
-                <Button
-                  variant="flat"
-                  color="danger"
-                  onClick={() => deleteRecipe(recipe._id)}
-                >
-                  Delete
-                </Button>
-              </div>
-            </CardFooter>
-          </Card>
+                </div>
+              </CardFooter>
+            </Card>
+          </ViewRecipe>
         </div>
       ))}
     </div>

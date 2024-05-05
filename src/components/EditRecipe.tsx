@@ -16,58 +16,29 @@ import {
 } from "@nextui-org/react";
 import { useRecipeContext } from "./RecipeContext";
 import { ChevronUp, X } from "lucide-react";
+import { categoriesList, Recipe } from "./types";
 
-// Define the type for the categories list
-type Category = {
-  value: string;
-  label: string;
-};
-
-const categoriesList: Category[] = [
-  { value: "appetizers", label: "Appetizers" },
-  { value: "breakfast", label: "Breakfast" },
-  { value: "dinner", label: "Dinner" },
-  { value: "lunch", label: "Lunch" },
-  { value: "main_course", label: "Main Course" },
-  { value: "side_dish", label: "Side Dish" },
-  { value: "snacks", label: "Snacks" },
-  { value: "soups", label: "Soups" },
-  { value: "desserts", label: "Desserts" },
-  { value: "beverages", label: "Beverages" },
-  { value: "sauces_and_seasonings", label: "Sauces and Seasonings" },
-];
-
-interface RecipeProps {
-  id: string;
-  title: string;
-  author: string;
-  ingredients: string[];
-  instructions: string;
-  categories: string[];
+interface EditRecipeProps {
+  recipe: Recipe;
 }
 
-const EditRecipe: React.FC<RecipeProps> = ({
-  id,
-  title,
-  author,
-  ingredients,
-  instructions,
-  categories,
-}) => {
+const EditRecipe: React.FC<EditRecipeProps> = ({ recipe }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [recipeTitle, setRecipeTitle] = useState(title);
-  const [recipeAuthor, setRecipeAuthor] = useState(author);
-  const [recipeIngredients, setRecipeIngredients] =
-    useState<string[]>(ingredients);
-  const [recipeInstructions, setRecipeInstructions] = useState(instructions);
+  const [recipeTitle, setRecipeTitle] = useState(recipe.title);
+  const [recipeAuthor, setRecipeAuthor] = useState(recipe.author);
+  const [recipeIngredients, setRecipeIngredients] = useState<string[]>(
+    recipe.ingredients,
+  );
+  const [recipeInstructions, setRecipeInstructions] = useState(
+    recipe.instructions,
+  );
   const [recipeCategories, setRecipeCategories] = useState<string>(
-    categories.join(","),
+    recipe.categories.join(","),
   );
   const [inputValue, setInputValue] = useState("");
 
   const { updateRecipes } = useRecipeContext();
   const [isFormValid, setIsFormValid] = useState(false);
-
   useEffect(() => {
     const allFieldsFilled =
       recipeTitle &&
@@ -95,7 +66,7 @@ const EditRecipe: React.FC<RecipeProps> = ({
         categoriesArray,
       );
       const response = await axios.put(
-        `https://dishcoverer.netlify.app/.netlify/functions/api/${id}`,
+        `https://dishcoverer.netlify.app/.netlify/functions/api/${recipe._id}`,
         {
           title: recipeTitle,
           author: recipeAuthor,
@@ -170,7 +141,7 @@ const EditRecipe: React.FC<RecipeProps> = ({
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                Add Your Own Recipe
+                Edit Recipe
               </ModalHeader>
               <ModalBody>
                 <Input
@@ -251,12 +222,12 @@ const EditRecipe: React.FC<RecipeProps> = ({
                       variant="flat"
                       className="text-gray-400"
                     >
-                      Edit
+                      Apply
                     </Button>
                   </Tooltip>
                 ) : (
                   <Button color="primary" variant="flat" onPress={handleSubmit}>
-                    Edit
+                    Apply
                   </Button>
                 )}
               </ModalFooter>
