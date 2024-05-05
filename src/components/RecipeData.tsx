@@ -8,6 +8,12 @@ import {
   Divider,
   Tooltip,
   Button,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
 } from "@nextui-org/react";
 import { useRecipeContext } from "./RecipeContext";
 import { Sparkle, Sparkles } from "lucide-react";
@@ -16,6 +22,7 @@ import ViewRecipe from "./ViewRecipe";
 
 const RecipeData: React.FC = () => {
   const { recipesFiltered, updateRecipes } = useRecipeContext();
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 
   const [favorites, setFavorites] = useState(() => {
     const storedFavorites = localStorage.getItem("favorites");
@@ -49,6 +56,7 @@ const RecipeData: React.FC = () => {
         `https://dishcoverer.netlify.app/.netlify/functions/api/${id}`,
       );
       // reloads after delete
+      onClose();
       updateRecipes();
     } catch (error) {
       console.error("Error deleting recipe:", error);
@@ -89,6 +97,9 @@ const RecipeData: React.FC = () => {
               </CardHeader>
               <Divider />
               <CardBody>
+                <p className="line-clamp-3 text-sm mb-3">
+                  {recipe.description}
+                </p>
                 <p className="text-xs text-gray-500">
                   {recipe.categories
                     .map((category) => formatCategoryName(category))
@@ -100,16 +111,39 @@ const RecipeData: React.FC = () => {
             <CardFooter>
               <div className="flex gap-2">
                 <EditRecipe recipe={recipe} />
-                <Button
-                  variant="flat"
-                  color="danger"
-                  onClick={() => deleteRecipe(recipe._id)}
-                >
+                <Button variant="flat" color="danger" onClick={onOpen}>
                   Delete
                 </Button>
               </div>
             </CardFooter>
           </Card>
+
+          <Modal isOpen={isOpen} onOpenChange={onOpenChange} backdrop="blur">
+            <ModalContent>
+              {(onClose) => (
+                <>
+                  <ModalHeader className="flex flex-col gap-1">
+                    Are you sure you want to delete this recipe
+                  </ModalHeader>
+                  <ModalBody>
+                    <p>This will permanently delete this recipe.</p>
+                  </ModalBody>
+                  <ModalFooter>
+                    <Button color="default" variant="light" onPress={onClose}>
+                      Cancel
+                    </Button>
+                    <Button
+                      color="danger"
+                      variant="flat"
+                      onPress={() => deleteRecipe(recipe._id)}
+                    >
+                      Delete
+                    </Button>
+                  </ModalFooter>
+                </>
+              )}
+            </ModalContent>
+          </Modal>
         </div>
       ))}
     </div>

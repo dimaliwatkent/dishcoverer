@@ -30,7 +30,7 @@ const BottomBar = () => {
       <Navbar maxWidth="full">
         <NavbarContent as="div" justify="start" className="max-w-80">
           <Input
-            placeholder="Search an Ingredient"
+            placeholder="Search a Recipe or Ingredient"
             size="sm"
             endContent={<Search />}
             type="search"

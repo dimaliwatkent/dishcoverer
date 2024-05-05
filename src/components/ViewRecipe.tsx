@@ -26,26 +26,34 @@ const ViewRecipe: React.FC<EditRecipeProps> = ({ recipe, children }) => {
         isOpen={isOpen}
         onClose={onClose}
         scrollBehavior="inside"
-        size="2xl"
+        size="5xl"
       >
         <ModalContent>
           {() => (
             <>
               <ModalHeader className="flex flex-col gap-1">
                 {recipe.title}
-              </ModalHeader>
-              <ModalBody>
-                <h3>
+                <h3 className="text-sm font-normal">
                   By <span className="">{recipe.author}</span>
                 </h3>
-                <p className="mr-2">Ingredients: </p>
-                <ul className="flex gap-1 flex-wrap">
+              </ModalHeader>
+              <ModalBody>
+                <p className="">{recipe.description}</p>
+                <h3 className="font-bold text-xl">Ingredients: </h3>
+                <ul className="">
                   {recipe.ingredients.map((ingredient, index) => (
-                    <li key={index}>{ingredient}</li>
+                    <li key={index}>
+                      {ingredient.charAt(0).toUpperCase() + ingredient.slice(1)}
+                    </li>
                   ))}
                 </ul>
-                <h3>{recipe.instructions}</h3>
-                <h3>{recipe.categories}</h3>
+
+                <h3 className="font-bold text-xl">Instructions: </h3>
+                <p>{recipe.instructions}</p>
+                <p className="font-bold">Servings: {recipe.servings}</p>
+                <p className="font-bold">
+                  Cooking Time: {recipe.cookingTime} minutes
+                </p>
               </ModalBody>
               <ModalFooter></ModalFooter>
             </>

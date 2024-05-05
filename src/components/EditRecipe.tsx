@@ -31,7 +31,6 @@ const EditRecipe: React.FC<EditRecipeProps> = ({ recipe }) => {
   const [instructions, setInstructions] = useState(recipe.instructions);
 
   const [categories, setCategories] = useState(recipe.categories);
-  console.log(categories);
   const [servings, setServings] = useState<number>(recipe.servings);
   const [cookingTime, setCookingTime] = useState<number>(recipe.cookingTime);
   const [inputValue, setInputValue] = useState("");
@@ -63,7 +62,7 @@ const EditRecipe: React.FC<EditRecipeProps> = ({ recipe }) => {
   async function handleSubmit() {
     try {
       // const categoriesArray = categories.split(",");
-      const response = await axios.put(
+      await axios.put(
         `https://dishcoverer.netlify.app/.netlify/functions/api/${recipe._id}`,
         {
           title: title,
@@ -77,18 +76,6 @@ const EditRecipe: React.FC<EditRecipeProps> = ({ recipe }) => {
           cookingTime: cookingTime,
         },
       );
-      console.log(response.data);
-
-      // Reset values
-      // setTitle("");
-      // setAuthor("");
-      // setDescription("");
-      // setIngredients([]);
-      // setInstructions("");
-      // setCategories([]);
-      // setInputValue("");
-      // setServings(1);
-      // setCookingTime(0);
 
       onClose();
       updateRecipes();
@@ -189,7 +176,7 @@ const EditRecipe: React.FC<EditRecipeProps> = ({ recipe }) => {
                 <Textarea
                   label="Description"
                   placeholder="Write a description"
-                  value={instructions}
+                  value={description}
                   onChange={(e) => setDescription(e.target.value)}
                 />
                 <Textarea

@@ -42,7 +42,7 @@ const AddRecipe = () => {
 
   async function handleSubmit() {
     try {
-      const response = await axios.post(
+      await axios.post(
         "https://dishcoverer.netlify.app/.netlify/functions/api/",
         {
           title: title,
@@ -55,8 +55,6 @@ const AddRecipe = () => {
           cookingTime: cookingTime,
         },
       );
-      console.log(response.data);
-      console.log(title, author, ingredients, instructions, categories);
 
       // Reset values
       setTitle("");

@@ -52,8 +52,25 @@ export const RecipeProvider: React.FC<RecipeProviderProps> = ({ children }) => {
       );
     }
     if (search) {
-      filteredRecipes = filteredRecipes.filter((recipe) =>
-        recipe.title.toLowerCase().includes(search.toLowerCase()),
+      // search title
+      // filteredRecipes = filteredRecipes.filter((recipe) =>
+      //   recipe.title.toLowerCase().includes(search.toLowerCase()),
+      // );
+
+      // search ingredient
+      // filteredRecipes = filteredRecipes.filter((recipe) =>
+      //   recipe.ingredients.some((ingredient) =>
+      //     ingredient.toLowerCase().includes(search.toLowerCase()),
+      //   ),
+      // );
+
+      // search both ingredient and title
+      filteredRecipes = filteredRecipes.filter(
+        (recipe) =>
+          recipe.title.toLowerCase().includes(search.toLowerCase()) ||
+          recipe.ingredients.some((ingredient) =>
+            ingredient.toLowerCase().includes(search.toLowerCase()),
+          ),
       );
     }
     setRecipesFiltered(filteredRecipes);

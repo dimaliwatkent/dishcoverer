@@ -24,7 +24,6 @@ function useFavorites(): Recipe[] {
 
 const FavoritesList: React.FC = () => {
   const favorites = useFavorites();
-  console.log(favorites);
 
   return (
     <div>
