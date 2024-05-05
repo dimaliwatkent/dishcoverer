@@ -46,6 +46,14 @@ export const RecipeProvider: React.FC<RecipeProviderProps> = ({ children }) => {
     let filteredRecipes = recipes;
     if (category === "all") {
       setRecipesFiltered(recipes);
+    } else if (category === "favorites") {
+      const favoriteIds = localStorage.getItem("favorites");
+      if (favoriteIds) {
+        const favoriteIdArray = JSON.parse(favoriteIds);
+        filteredRecipes = recipes.filter((recipe) =>
+          favoriteIdArray.includes(recipe._id.toString()),
+        );
+      }
     } else if (category) {
       filteredRecipes = recipes.filter((recipe) =>
         recipe.categories.includes(category),

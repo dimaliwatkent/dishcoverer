@@ -6,7 +6,11 @@ import { Select, SelectItem } from "@nextui-org/react";
 import { useRecipeContext } from "./RecipeContext";
 import { categoriesList } from "./types";
 
-const allCategoriesList = [{ value: "all", label: "All" }, ...categoriesList];
+const allCategoriesList = [
+  { value: "all", label: "All" },
+  { value: "favorites", label: "Favorites" },
+  ...categoriesList,
+];
 
 const BottomBar = () => {
   const { filterRecipes } = useRecipeContext();
