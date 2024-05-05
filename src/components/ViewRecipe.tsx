@@ -29,7 +29,7 @@ const ViewRecipe: React.FC<EditRecipeProps> = ({ recipe, children }) => {
         size="2xl"
       >
         <ModalContent>
-          {(onClose) => (
+          {() => (
             <>
               <ModalHeader className="flex flex-col gap-1">
                 {recipe.title}

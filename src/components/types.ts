@@ -16,7 +16,10 @@ export interface Recipe {
   _id: string;
   title: string;
   author: string;
+  description: string;
   ingredients: string[];
   instructions: string;
   categories: string[];
+  servings: number;
+  cookingTime: number;
 }

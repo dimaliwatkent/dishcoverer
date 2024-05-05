@@ -55,15 +55,12 @@ const RecipeData: React.FC = () => {
     }
   };
 
-  const handleAnchorClick = () => {
-    alert();
-  };
   return (
     <div className="flex flex-wrap justify-center gap-3">
       {recipesFiltered.map((recipe) => (
         <div key={recipe._id}>
-          <ViewRecipe recipe={recipe}>
-            <Card className="max-w-52">
+          <Card className="max-w-52">
+            <ViewRecipe recipe={recipe}>
               <CardHeader className="flex gap-3">
                 <div className="flex flex-col pr-8">
                   <h2 className="text-lg font-bold">{recipe.title}</h2>
@@ -98,21 +95,21 @@ const RecipeData: React.FC = () => {
                     .join(", ")}
                 </p>
               </CardBody>
-              <Divider />
-              <CardFooter>
-                <div className="flex gap-2">
-                  <EditRecipe recipe={recipe} />
-                  <Button
-                    variant="flat"
-                    color="danger"
-                    onClick={() => deleteRecipe(recipe._id)}
-                  >
-                    Delete
-                  </Button>
-                </div>
-              </CardFooter>
-            </Card>
-          </ViewRecipe>
+            </ViewRecipe>
+            <Divider />
+            <CardFooter>
+              <div className="flex gap-2">
+                <EditRecipe recipe={recipe} />
+                <Button
+                  variant="flat"
+                  color="danger"
+                  onClick={() => deleteRecipe(recipe._id)}
+                >
+                  Delete
+                </Button>
+              </div>
+            </CardFooter>
+          </Card>
         </div>
       ))}
     </div>

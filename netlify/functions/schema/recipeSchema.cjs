@@ -14,6 +14,11 @@ const recipeSchema = new Schema(
       type: String,
       trim: true,
     },
+    description: {
+      type: String,
+      required: true,
+      trim: true,
+    },
     ingredients: [
       {
         type: String,
@@ -32,6 +37,14 @@ const recipeSchema = new Schema(
         default: [],
       },
     ],
+    servings: {
+      type: Number,
+      min: 1,
+    },
+    cookingTime: {
+      type: Number,
+      min: 1,
+    },
     likes: {
       type: Number,
       default: 0,

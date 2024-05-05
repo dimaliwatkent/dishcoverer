@@ -1,15 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
-
-interface Recipe {
-  _id: string;
-  title: string;
-  author: string;
-  ingredients: string[];
-  categories: string[];
-  instructions: string;
-  likes: number;
-}
+import { Recipe } from "./types";
 
 interface RecipeContextType {
   recipes: Recipe[];

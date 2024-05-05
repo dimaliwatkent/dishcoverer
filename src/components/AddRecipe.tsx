@@ -22,9 +22,13 @@ const AddRecipe = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
+  const [description, setDescription] = useState("");
   const [ingredients, setIngredients] = useState<string[]>([]);
   const [instructions, setInstructions] = useState("");
-  const [categories, setCategories] = useState("");
+  const [categories, setCategories] = useState<string[]>([]);
+  const [servings, setServings] = useState<number>(1);
+  const [cookingTime, setCookingTime] = useState<number>(0);
+
   const [inputValue, setInputValue] = useState("");
 
   const { updateRecipes } = useRecipeContext();
@@ -38,16 +42,17 @@ const AddRecipe = () => {
 
   async function handleSubmit() {
     try {
-      const categoriesArray = categories.split(",");
-      console.log(title, author, ingredients, instructions, categoriesArray);
       const response = await axios.post(
         "https://dishcoverer.netlify.app/.netlify/functions/api/",
         {
           title: title,
           author: author,
+          description: description,
           ingredients: ingredients,
           instructions: instructions,
           categories: categories,
+          servings: servings,
+          cookingTime: cookingTime,
         },
       );
       console.log(response.data);
@@ -56,10 +61,13 @@ const AddRecipe = () => {
       // Reset values
       setTitle("");
       setAuthor("");
+      setDescription("");
       setIngredients([]);
       setInstructions("");
-      setCategories("");
+      setCategories([]);
       setInputValue("");
+      setServings(1);
+      setCookingTime(0);
 
       onClose();
       updateRecipes();
@@ -72,7 +80,7 @@ const AddRecipe = () => {
     event: React.ChangeEvent<HTMLSelectElement>,
   ) => {
     const value = event.target.value;
-    setCategories(value);
+    setCategories(value.split(","));
   };
 
   const handleIngredientChange = (
@@ -163,6 +171,12 @@ const AddRecipe = () => {
                   </Button>
                 </div>
                 <Textarea
+                  label="Description"
+                  placeholder="Write a description"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                />
+                <Textarea
                   label="Instructions"
                   placeholder="Enter your step by step procedure"
                   value={instructions}
@@ -183,6 +197,22 @@ const AddRecipe = () => {
                     </SelectItem>
                   ))}
                 </Select>
+
+                <Input
+                  size="sm"
+                  type="number"
+                  label="Servings"
+                  value={servings.toString()}
+                  onChange={(e) => setServings(Number(e.target.value))}
+                />
+
+                <Input
+                  size="sm"
+                  type="number"
+                  label="Cooking Time (Minutes)"
+                  value={cookingTime.toString()}
+                  onChange={(e) => setCookingTime(Number(e.target.value))}
+                />
               </ModalBody>
               <ModalFooter>
                 <Button color="danger" variant="light" onPress={onClose}>

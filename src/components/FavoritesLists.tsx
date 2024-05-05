@@ -10,7 +10,7 @@ interface Recipe {
 
 // Custom hook to get favorites from local storage
 function useFavorites(): Recipe[] {
-  const [favorites, setFavorites] = useState<Recipe[]>(() => {
+  const [favorites] = useState<Recipe[]>(() => {
     const storedFavorites = localStorage.getItem("favorites");
     return storedFavorites ? JSON.parse(storedFavorites) : [];
   });

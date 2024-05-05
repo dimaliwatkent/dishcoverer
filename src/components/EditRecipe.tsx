@@ -24,73 +24,71 @@ interface EditRecipeProps {
 
 const EditRecipe: React.FC<EditRecipeProps> = ({ recipe }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [recipeTitle, setRecipeTitle] = useState(recipe.title);
-  const [recipeAuthor, setRecipeAuthor] = useState(recipe.author);
-  const [recipeIngredients, setRecipeIngredients] = useState<string[]>(
-    recipe.ingredients,
-  );
-  const [recipeInstructions, setRecipeInstructions] = useState(
-    recipe.instructions,
-  );
-  const [recipeCategories, setRecipeCategories] = useState<string>(
-    recipe.categories.join(","),
-  );
+  const [title, setTitle] = useState(recipe.title);
+  const [author, setAuthor] = useState(recipe.author);
+  const [description, setDescription] = useState(recipe.description);
+  const [ingredients, setIngredients] = useState<string[]>(recipe.ingredients);
+  const [instructions, setInstructions] = useState(recipe.instructions);
+
+  const [categories, setCategories] = useState(recipe.categories);
+  console.log(categories);
+  const [servings, setServings] = useState<number>(recipe.servings);
+  const [cookingTime, setCookingTime] = useState<number>(recipe.cookingTime);
   const [inputValue, setInputValue] = useState("");
 
   const { updateRecipes } = useRecipeContext();
   const [isFormValid, setIsFormValid] = useState(false);
   useEffect(() => {
     const allFieldsFilled =
-      recipeTitle &&
-      recipeAuthor &&
-      recipeIngredients.length > 0 &&
-      recipeInstructions &&
-      recipeCategories;
+      title &&
+      author &&
+      ingredients.length > 0 &&
+      description &&
+      instructions &&
+      categories &&
+      servings &&
+      cookingTime;
     setIsFormValid(Boolean(allFieldsFilled));
   }, [
-    recipeTitle,
-    recipeAuthor,
-    recipeIngredients,
-    recipeInstructions,
-    recipeCategories,
+    title,
+    author,
+    description,
+    ingredients,
+    instructions,
+    categories,
+    servings,
+    cookingTime,
   ]);
 
   async function handleSubmit() {
     try {
-      const categoriesArray = recipeCategories.split(",");
-      console.log(
-        recipeTitle,
-        recipeAuthor,
-        recipeIngredients,
-        recipeInstructions,
-        categoriesArray,
-      );
+      // const categoriesArray = categories.split(",");
       const response = await axios.put(
         `https://dishcoverer.netlify.app/.netlify/functions/api/${recipe._id}`,
         {
-          title: recipeTitle,
-          author: recipeAuthor,
-          ingredients: recipeIngredients,
-          instructions: recipeInstructions,
-          categories: recipeCategories,
+          title: title,
+          author: author,
+          description: description,
+          ingredients: ingredients,
+          instructions: instructions,
+          // categories: categoriesArray,
+          categories: categories,
+          servings: servings,
+          cookingTime: cookingTime,
         },
       );
       console.log(response.data);
-      console.log(
-        recipeTitle,
-        recipeAuthor,
-        recipeIngredients,
-        recipeInstructions,
-        categoriesArray,
-      );
 
       // Reset values
-      setRecipeTitle("");
-      setRecipeAuthor("");
-      setRecipeIngredients([]);
-      setRecipeInstructions("");
-      setRecipeCategories("");
-      setInputValue("");
+      // setTitle("");
+      // setAuthor("");
+      // setDescription("");
+      // setIngredients([]);
+      // setInstructions("");
+      // setCategories([]);
+      // setInputValue("");
+      // setServings(1);
+      // setCookingTime(0);
 
       onClose();
       updateRecipes();
@@ -103,7 +101,7 @@ const EditRecipe: React.FC<EditRecipeProps> = ({ recipe }) => {
     event: React.ChangeEvent<HTMLSelectElement>,
   ) => {
     const value = event.target.value;
-    setRecipeCategories(value);
+    setCategories(value.split(","));
   };
 
   const handleIngredientChange = (
@@ -113,14 +111,12 @@ const EditRecipe: React.FC<EditRecipeProps> = ({ recipe }) => {
   };
   const handleAddIngredient = () => {
     if (inputValue.trim() !== "") {
-      setRecipeIngredients([...recipeIngredients, inputValue]);
+      setIngredients([...ingredients, inputValue]);
       setInputValue("");
     }
   };
   const handleRemoveIngredient = (indexToRemove: number) => {
-    setRecipeIngredients(
-      recipeIngredients.filter((_, index) => index !== indexToRemove),
-    );
+    setIngredients(ingredients.filter((_, index) => index !== indexToRemove));
   };
 
   return (
@@ -148,20 +144,20 @@ const EditRecipe: React.FC<EditRecipeProps> = ({ recipe }) => {
                   size="sm"
                   type="text"
                   label="Recipe Name"
-                  value={recipeTitle}
-                  onChange={(e) => setRecipeTitle(e.target.value)}
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
                 />
                 <Input
                   size="sm"
                   type="text"
                   label="Author"
-                  value={recipeAuthor}
-                  onChange={(e) => setRecipeAuthor(e.target.value)}
+                  value={author}
+                  onChange={(e) => setAuthor(e.target.value)}
                 />
                 <div className="flex ">
                   <p className="mr-2">Ingredients: </p>
                   <ul className="flex gap-1 flex-wrap">
-                    {recipeIngredients.map((ingredient, index) => (
+                    {ingredients.map((ingredient, index) => (
                       <li key={index}>
                         <button
                           className="bg-default px-2 rounded-xl flex items-center"
@@ -189,11 +185,18 @@ const EditRecipe: React.FC<EditRecipeProps> = ({ recipe }) => {
                     Insert
                   </Button>
                 </div>
+
+                <Textarea
+                  label="Description"
+                  placeholder="Write a description"
+                  value={instructions}
+                  onChange={(e) => setDescription(e.target.value)}
+                />
                 <Textarea
                   label="Instructions"
                   placeholder="Enter your step by step procedure"
-                  value={recipeInstructions}
-                  onChange={(e) => setRecipeInstructions(e.target.value)}
+                  value={instructions}
+                  onChange={(e) => setInstructions(e.target.value)}
                 />
 
                 <Select
@@ -201,7 +204,7 @@ const EditRecipe: React.FC<EditRecipeProps> = ({ recipe }) => {
                   disableSelectorIconRotation
                   selectorIcon={<ChevronUp />}
                   selectionMode="multiple"
-                  value={recipeCategories}
+                  value={categories}
                   onChange={handleCategoryChange}
                 >
                   {categoriesList.map((category) => (
@@ -210,6 +213,22 @@ const EditRecipe: React.FC<EditRecipeProps> = ({ recipe }) => {
                     </SelectItem>
                   ))}
                 </Select>
+
+                <Input
+                  size="sm"
+                  type="number"
+                  label="Servings"
+                  value={servings.toString()}
+                  onChange={(e) => setServings(Number(e.target.value))}
+                />
+
+                <Input
+                  size="sm"
+                  type="number"
+                  label="Cooking Time (Minutes)"
+                  value={cookingTime.toString()}
+                  onChange={(e) => setCookingTime(Number(e.target.value))}
+                />
               </ModalBody>
               <ModalFooter>
                 <Button color="danger" variant="light" onPress={onClose}>
